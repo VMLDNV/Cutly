@@ -1,4 +1,9 @@
 
+using Cutly.API.Data;
+using Cutly.API.Models.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace Cutly.API
 {
     public class Program
@@ -7,25 +12,34 @@ namespace Cutly.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                            .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddOpenApi();
+
+            var connectionString = builder.Configuration
+                .GetConnectionString("DefaultConnection");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Database connection string is missing.");
+            }
+
+            builder.Services.AddDbContext<ApplicationDbContext>(
+                options => options.UseNpgsql(
+                    connectionString,
+                    npgsql => npgsql.UseNetTopologySuite()));
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
             app.MapControllers();
 
             app.Run();
