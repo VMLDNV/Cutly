@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Cutly.API.Models.Business;
 using Cutly.API.Models.Salon;
 using Cutly.API.Models.Appointments;
+using Cutly.API.Models.Reviews;
 using NetTopologySuite.Geometries;
 
 namespace Cutly.API.Data;
@@ -24,6 +25,7 @@ public class ApplicationDbContext
     public DbSet<EmployeeWorkingHour> EmployeeWorkingHours => Set<EmployeeWorkingHour>();
     public DbSet<EmployeeTimeOff> EmployeeTimeOffs => Set<EmployeeTimeOff>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
+    public DbSet<Review> Reviews => Set<Review>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -159,6 +161,31 @@ public class ApplicationDbContext
                 a.SalonEmployeeId,
                 a.StartDateTime
             });
+
+        builder.Entity<Review>()
+            .HasOne(r => r.Appointment)
+            .WithOne()
+            .HasForeignKey<Review>(r => r.AppointmentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Review>()
+            .HasOne(r => r.Customer)
+            .WithMany()
+            .HasForeignKey(r => r.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Review>()
+            .HasIndex(r => r.AppointmentId)
+            .IsUnique();
+
+        builder.Entity<Review>()
+            .ToTable("Reviews", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_Reviews_Rating",
+                    "\"Rating\" BETWEEN 1 AND 5");
+            });
+
 
     }
 }
