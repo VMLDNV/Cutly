@@ -20,7 +20,8 @@ public class ApplicationDbContext
     public DbSet<SalonEmployee> SalonEmployees => Set<SalonEmployee>();
     public DbSet<Service> Services => Set<Service>();
     public DbSet<EmployeeService> EmployeeServices => Set<EmployeeService>();
-    
+    public DbSet<EmployeeWorkingHour> EmployeeWorkingHours => Set<EmployeeWorkingHour>();
+    public DbSet<EmployeeTimeOff> EmployeeTimeOffs => Set<EmployeeTimeOff>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -75,6 +76,45 @@ public class ApplicationDbContext
                 table.HasCheckConstraint(
                     "CK_EmployeeServices_DurationMinutes",
                     "\"DurationMinutes\" > 0");
+            });
+        builder.Entity<EmployeeWorkingHour>()
+            .HasOne(wh => wh.SalonEmployee)
+            .WithMany()
+            .HasForeignKey(wh => wh.SalonEmployeeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<EmployeeWorkingHour>()
+            .HasIndex(wh => new
+            {
+                wh.SalonEmployeeId,
+                wh.DayOfWeek
+            })
+            .IsUnique();
+
+        builder.Entity<EmployeeWorkingHour>()
+            .ToTable("EmployeeWorkingHours", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_EmployeeWorkingHours_DayOfWeek",
+                    "\"DayOfWeek\" BETWEEN 1 AND 7");
+
+                table.HasCheckConstraint(
+                    "CK_EmployeeWorkingHours_TimeRange",
+                    "\"IsDayOff\" = TRUE OR \"EndTime\" > \"StartTime\"");
+            });
+
+        builder.Entity<EmployeeTimeOff>()
+            .HasOne(to => to.SalonEmployee)
+            .WithMany()
+            .HasForeignKey(to => to.SalonEmployeeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<EmployeeTimeOff>()
+            .ToTable("EmployeeTimeOffs", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_EmployeeTimeOffs_DateRange",
+                    "\"EndDateTime\" > \"StartDateTime\"");
             });
     }
 }

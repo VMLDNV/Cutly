@@ -101,6 +101,75 @@ namespace Cutly.API.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeTimeOff", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SalonEmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonEmployeeId");
+
+                    b.ToTable("EmployeeTimeOffs", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_EmployeeTimeOffs_DateRange", "\"EndDateTime\" > \"StartDateTime\"");
+                        });
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeWorkingHour", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time without time zone");
+
+                    b.Property<bool>("IsDayOff")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("SalonEmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonEmployeeId", "DayOfWeek")
+                        .IsUnique();
+
+                    b.ToTable("EmployeeWorkingHours", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_EmployeeWorkingHours_DayOfWeek", "\"DayOfWeek\" BETWEEN 1 AND 7");
+
+                            t.HasCheckConstraint("CK_EmployeeWorkingHours_TimeRange", "\"IsDayOff\" = TRUE OR \"EndTime\" > \"StartTime\"");
+                        });
+                });
+
             modelBuilder.Entity("Cutly.API.Models.Salon.Salon", b =>
                 {
                     b.Property<int>("Id")
@@ -442,6 +511,28 @@ namespace Cutly.API.Data.Migrations
                     b.Navigation("SalonEmployee");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeTimeOff", b =>
+                {
+                    b.HasOne("Cutly.API.Models.Salon.SalonEmployee", "SalonEmployee")
+                        .WithMany()
+                        .HasForeignKey("SalonEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SalonEmployee");
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeWorkingHour", b =>
+                {
+                    b.HasOne("Cutly.API.Models.Salon.SalonEmployee", "SalonEmployee")
+                        .WithMany()
+                        .HasForeignKey("SalonEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SalonEmployee");
                 });
 
             modelBuilder.Entity("Cutly.API.Models.Salon.Salon", b =>
