@@ -5,6 +5,7 @@ using Cutly.API.Models.Business;
 using Cutly.API.Models.Salon;
 using Cutly.API.Models.Appointments;
 using Cutly.API.Models.Reviews;
+using Cutly.API.Models.Favorites;
 using NetTopologySuite.Geometries;
 
 namespace Cutly.API.Data;
@@ -26,6 +27,7 @@ public class ApplicationDbContext
     public DbSet<EmployeeTimeOff> EmployeeTimeOffs => Set<EmployeeTimeOff>();
     public DbSet<Appointment> Appointments => Set<Appointment>();
     public DbSet<Review> Reviews => Set<Review>();
+    public DbSet<FavoriteSalon> FavoriteSalons => Set<FavoriteSalon>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -185,6 +187,22 @@ public class ApplicationDbContext
                     "CK_Reviews_Rating",
                     "\"Rating\" BETWEEN 1 AND 5");
             });
+
+        builder.Entity<FavoriteSalon>()
+            .HasOne(f => f.User)
+            .WithMany()
+            .HasForeignKey(f => f.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<FavoriteSalon>()
+            .HasOne(f => f.Salon)
+            .WithMany()
+            .HasForeignKey(f => f.SalonId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<FavoriteSalon>()
+            .HasIndex(f => new { f.UserId, f.SalonId })
+            .IsUnique();
 
 
     }

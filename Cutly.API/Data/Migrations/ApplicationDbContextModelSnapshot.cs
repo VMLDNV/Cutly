@@ -118,6 +118,34 @@ namespace Cutly.API.Data.Migrations
                     b.ToTable("Businesses");
                 });
 
+            modelBuilder.Entity("Cutly.API.Models.Favorites.FavoriteSalon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("SalonId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalonId");
+
+                    b.HasIndex("UserId", "SalonId")
+                        .IsUnique();
+
+                    b.ToTable("FavoriteSalons");
+                });
+
             modelBuilder.Entity("Cutly.API.Models.Reviews.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -615,6 +643,25 @@ namespace Cutly.API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Favorites.FavoriteSalon", b =>
+                {
+                    b.HasOne("Cutly.API.Models.Salon.Salon", "Salon")
+                        .WithMany()
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cutly.API.Models.Users.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Salon");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Cutly.API.Models.Reviews.Review", b =>
