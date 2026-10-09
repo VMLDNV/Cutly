@@ -62,6 +62,45 @@ namespace Cutly.API.Data.Migrations
                     b.ToTable("Businesses");
                 });
 
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeService", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<int>("SalonEmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("SalonEmployeeId", "ServiceId")
+                        .IsUnique();
+
+                    b.ToTable("EmployeeServices", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_EmployeeServices_DurationMinutes", "\"DurationMinutes\" > 0");
+
+                            t.HasCheckConstraint("CK_EmployeeServices_Price", "\"Price\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Cutly.API.Models.Salon.Salon", b =>
                 {
                     b.Property<int>("Id")
@@ -137,6 +176,32 @@ namespace Cutly.API.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("SalonEmployees");
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Salon.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Cutly.API.Models.Users.ApplicationUser", b =>
@@ -358,6 +423,25 @@ namespace Cutly.API.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Salon.EmployeeService", b =>
+                {
+                    b.HasOne("Cutly.API.Models.Salon.SalonEmployee", "SalonEmployee")
+                        .WithMany()
+                        .HasForeignKey("SalonEmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cutly.API.Models.Salon.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SalonEmployee");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Cutly.API.Models.Salon.Salon", b =>
