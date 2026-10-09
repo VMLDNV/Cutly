@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Cutly.API.Models.Business;
 using Cutly.API.Models.Salon;
+using Cutly.API.Models.Appointments;
 using NetTopologySuite.Geometries;
 
 namespace Cutly.API.Data;
@@ -22,6 +23,7 @@ public class ApplicationDbContext
     public DbSet<EmployeeService> EmployeeServices => Set<EmployeeService>();
     public DbSet<EmployeeWorkingHour> EmployeeWorkingHours => Set<EmployeeWorkingHour>();
     public DbSet<EmployeeTimeOff> EmployeeTimeOffs => Set<EmployeeTimeOff>();
+    public DbSet<Appointment> Appointments => Set<Appointment>();
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -116,5 +118,47 @@ public class ApplicationDbContext
                     "CK_EmployeeTimeOffs_DateRange",
                     "\"EndDateTime\" > \"StartDateTime\"");
             });
+
+        builder.Entity<Appointment>()
+            .HasOne(a => a.Customer)
+            .WithMany()
+            .HasForeignKey(a => a.CustomerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Appointment>()
+            .HasOne(a => a.SalonEmployee)
+            .WithMany()
+            .HasForeignKey(a => a.SalonEmployeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Appointment>()
+            .HasOne(a => a.EmployeeService)
+            .WithMany()
+            .HasForeignKey(a => a.EmployeeServiceId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Appointment>()
+            .Property(a => a.Price)
+            .HasPrecision(10, 2);
+
+        builder.Entity<Appointment>()
+            .ToTable("Appointments", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_Appointments_DateRange",
+                    "\"EndDateTime\" > \"StartDateTime\"");
+
+                table.HasCheckConstraint(
+                    "CK_Appointments_Price",
+                    "\"Price\" >= 0");
+            });
+
+        builder.Entity<Appointment>()
+            .HasIndex(a => new
+            {
+                a.SalonEmployeeId,
+                a.StartDateTime
+            });
+
     }
 }

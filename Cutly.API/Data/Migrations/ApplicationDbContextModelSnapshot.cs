@@ -24,6 +24,62 @@ namespace Cutly.API.Data.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Cutly.API.Models.Appointments.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CancellationReason")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomerNotes")
+                        .HasColumnType("text");
+
+                    b.Property<int>("EmployeeServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Price")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<int>("SalonEmployeeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("EmployeeServiceId");
+
+                    b.HasIndex("SalonEmployeeId", "StartDateTime");
+
+                    b.ToTable("Appointments", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Appointments_DateRange", "\"EndDateTime\" > \"StartDateTime\"");
+
+                            t.HasCheckConstraint("CK_Appointments_Price", "\"Price\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("Cutly.API.Models.Business.Business", b =>
                 {
                     b.Property<int>("Id")
@@ -481,6 +537,33 @@ namespace Cutly.API.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Cutly.API.Models.Appointments.Appointment", b =>
+                {
+                    b.HasOne("Cutly.API.Models.Users.ApplicationUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cutly.API.Models.Salon.EmployeeService", "EmployeeService")
+                        .WithMany()
+                        .HasForeignKey("EmployeeServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Cutly.API.Models.Salon.SalonEmployee", "SalonEmployee")
+                        .WithMany()
+                        .HasForeignKey("SalonEmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("EmployeeService");
+
+                    b.Navigation("SalonEmployee");
                 });
 
             modelBuilder.Entity("Cutly.API.Models.Business.Business", b =>
