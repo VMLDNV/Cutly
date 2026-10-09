@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Cutly.API/Cutly.API.csproj" />
+  <Project Path="Cutly.Mobile/Cutly.Mobile.csproj" Id="e5a41be6-8a20-4956-af40-192a39ccc6a8" />
+  <Project Path="Cutly.Shared/Cutly.Shared.csproj" Id="49ca0a5a-ae9f-4738-bf7b-dd0a7aaf2656" />
+  <Project Path="Cutly.Tests/Cutly.Tests.csproj" Id="4d2a259e-f589-4627-950d-3e5f466b3a12" />
+</Solution>
