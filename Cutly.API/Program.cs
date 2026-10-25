@@ -6,13 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Security.Claims;
+using Cutly.API.Data.Seeding;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Cutly.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -104,6 +106,15 @@ namespace Cutly.API
                 });
 
             var app = builder.Build();
+            if (app.Environment.IsDevelopment())
+            {
+                using var scope = app.Services.CreateScope();
+
+                var roleManager = scope.ServiceProvider
+                    .GetRequiredService<RoleManager<IdentityRole>>();
+
+                await IdentitySeeder.SeedRolesAsync(roleManager);
+            }
 
             if (app.Environment.IsDevelopment())
             {

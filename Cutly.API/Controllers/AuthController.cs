@@ -30,7 +30,8 @@ public class AuthController : ControllerBase
         string FirstName,
         string LastName,
         string Email,
-        string Password);
+        string Password,
+        string AccountType);
 
     public record LoginRequest(
         string Email,
@@ -38,12 +39,41 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(
-        RegisterRequest request)
+     [FromBody] RegisterRequest request)
     {
-        var existingUser = await _userManager.FindByEmailAsync(
-            request.Email);
+        if (string.IsNullOrWhiteSpace(request.FirstName) ||
+            string.IsNullOrWhiteSpace(request.LastName) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password) ||
+            string.IsNullOrWhiteSpace(request.AccountType))
+        {
+            return BadRequest(new
+            {
+                message = "All fields are required."
+            });
+        }
 
-        if (existingUser is not null)
+        var normalizedAccountType = request.AccountType.Trim();
+
+        string role = normalizedAccountType.ToLowerInvariant() switch
+        {
+            "customer" => "Customer",
+            "barber" => "Employee",
+            _ => string.Empty
+        };
+
+        if (string.IsNullOrEmpty(role))
+        {
+            return BadRequest(new
+            {
+                message = "AccountType must be Customer or Barber."
+            });
+        }
+
+        var existingUser = await _userManager.FindByEmailAsync(
+            request.Email.Trim());
+
+        if (existingUser != null)
         {
             return Conflict(new
             {
@@ -60,7 +90,8 @@ public class AuthController : ControllerBase
         };
 
         var result = await _userManager.CreateAsync(
-            user, request.Password);
+            user,
+            request.Password);
 
         if (!result.Succeeded)
         {
@@ -70,11 +101,24 @@ public class AuthController : ControllerBase
             });
         }
 
+        var roleResult = await _userManager.AddToRoleAsync(user, role);
+
+        if (!roleResult.Succeeded)
+        {
+            await _userManager.DeleteAsync(user);
+
+            return StatusCode(500, new
+            {
+                message = "Could not assign the account role."
+            });
+        }
+
         return Ok(new
         {
             message = "Registration successful.",
             userId = user.Id,
-            email = user.Email
+            email = user.Email,
+            accountType = normalizedAccountType
         });
     }
 
