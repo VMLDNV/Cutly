@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False"
+    SafeAreaEdges="None">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="28,40,28,30"
+            Spacing="18">
+
+            <Label
+                Text="CUTLY"
+                FontSize="34"
+                FontAttributes="Bold"
+                CharacterSpacing="5"
+                TextColor="White"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Радваме се да те видим."
+                FontSize="24"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center"
+                Margin="0,30,0,0" />
+
+            <Label
+                Text="Влез в своя профил"
+                FontSize="14"
+                TextColor="#AAAAAA"
+                HorizontalOptions="Center"
+                Margin="0,0,0,15" />
+
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Имейл адрес"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                Keyboard="Email"
+                HeightRequest="54" />
+
+            <Entry
+                x:Name="PasswordEntry"
+                Placeholder="Парола"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                IsPassword="True"
+                HeightRequest="54" />
+
+            <Label
+                x:Name="ErrorLabel"
+                IsVisible="False"
+                TextColor="#FF7777"
+                FontSize="13" />
+
+            <Button
+                x:Name="LoginButton"
+                Text="Вход"
+                Clicked="OnLoginClicked"
+                HeightRequest="54"
+                CornerRadius="27"
+                BackgroundColor="White"
+                TextColor="#111111"
+                FontAttributes="Bold"
+                Margin="0,10,0,0" />
+
+            <Button
+                Text="Назад"
+                Clicked="OnBackClicked"
+                HeightRequest="50"
+                CornerRadius="25"
+                BackgroundColor="#202020"
+                TextColor="White"
+                BorderColor="#444444"
+                BorderWidth="1" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

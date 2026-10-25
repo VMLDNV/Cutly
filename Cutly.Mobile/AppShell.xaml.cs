@@ -1,10 +1,19 @@
-﻿namespace Cutly.Mobile
+﻿using Cutly.Mobile.Pages;
+
+namespace Cutly.Mobile;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        Routing.RegisterRoute(
+            nameof(RegisterPage),
+            typeof(RegisterPage));
+
+        Routing.RegisterRoute(
+            nameof(LoginPage),
+            typeof(LoginPage));
     }
 }

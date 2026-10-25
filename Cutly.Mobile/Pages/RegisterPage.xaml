@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False"
+    SafeAreaEdges="None">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="28,35,28,35"
+            Spacing="18">
+
+            <Label
+                Text="CUTLY"
+                FontSize="32"
+                FontAttributes="Bold"
+                CharacterSpacing="5"
+                TextColor="White"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Създай своя профил"
+                FontSize="25"
+                FontAttributes="Bold"
+                TextColor="White"
+                HorizontalOptions="Center"
+                Margin="0,12,0,0" />
+
+            <Label
+                x:Name="AccountTypeLabel"
+                Text="Регистрация като клиент"
+                FontSize="14"
+                TextColor="#B8B8B8"
+                HorizontalOptions="Center"
+                Margin="0,0,0,10" />
+
+            <Entry
+                x:Name="FirstNameEntry"
+                Placeholder="Име"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                HeightRequest="54" />
+
+            <Entry
+                x:Name="LastNameEntry"
+                Placeholder="Фамилия"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                HeightRequest="54" />
+
+            <Entry
+                x:Name="EmailEntry"
+                Placeholder="Имейл адрес"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                Keyboard="Email"
+                HeightRequest="54" />
+
+            <Entry
+                x:Name="PasswordEntry"
+                Placeholder="Парола"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                IsPassword="True"
+                HeightRequest="54" />
+
+            <Entry
+                x:Name="ConfirmPasswordEntry"
+                Placeholder="Потвърди паролата"
+                PlaceholderColor="#999999"
+                TextColor="White"
+                BackgroundColor="#1B1B1B"
+                IsPassword="True"
+                HeightRequest="54" />
+
+            <Label
+                x:Name="ErrorLabel"
+                IsVisible="False"
+                TextColor="#FF7777"
+                FontSize="13" />
+
+            <Button
+                x:Name="RegisterButton"
+                Text="Създай профил"
+                Clicked="OnRegisterClicked"
+                HeightRequest="54"
+                CornerRadius="27"
+                BackgroundColor="White"
+                TextColor="#111111"
+                FontAttributes="Bold"
+                Margin="0,8,0,0" />
+
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Spacing="5">
+
+                <Label
+                    Text="Вече имаш профил?"
+                    TextColor="#AAAAAA"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Text="Вход"
+                    Clicked="OnLoginClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Padding="4,8" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
