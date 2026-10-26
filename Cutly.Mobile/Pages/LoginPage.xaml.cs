@@ -1,4 +1,5 @@
 ﻿using Cutly.Mobile.Services;
+using Cutly.Mobile.Pages;
 
 namespace Cutly.Mobile.Pages;
 
@@ -38,12 +39,8 @@ public partial class LoginPage : ContentPage
 
             if (success)
             {
-                await DisplayAlert(
-                    "Cutly",
-                    "Входът е успешен!",
-                    "OK");
-
-                await Shell.Current.GoToAsync("//MainPage");
+                await Shell.Current.GoToAsync(
+                    nameof(CustomerHomePage));
             }
             else
             {

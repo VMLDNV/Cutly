@@ -114,6 +114,9 @@ namespace Cutly.API
                     .GetRequiredService<RoleManager<IdentityRole>>();
 
                 await IdentitySeeder.SeedRolesAsync(roleManager);
+                await IdentitySeeder.SeedTestBusinessOwnerAsync(
+    scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(),
+    "testowner@example.com");
             }
 
             if (app.Environment.IsDevelopment())

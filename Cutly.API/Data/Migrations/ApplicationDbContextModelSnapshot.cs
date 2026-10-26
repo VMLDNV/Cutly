@@ -308,6 +308,10 @@ namespace Cutly.API.Data.Migrations
                     b.Property<int>("BusinessId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.CustomerHomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20,24,20,24" Spacing="22">
+
+                <!-- Header -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <VerticalStackLayout Spacing="3">
+                        <Label
+                            Text="CUTLY"
+                            FontSize="27"
+                            FontAttributes="Bold"
+                            CharacterSpacing="4"
+                            TextColor="White" />
+
+                        <Label
+                            Text="Твоят стил. Твоят час."
+                            FontSize="12"
+                            TextColor="#999999" />
+                    </VerticalStackLayout>
+
+                    <Border
+                        Grid.Column="1"
+                        WidthRequest="46"
+                        HeightRequest="46"
+                        Stroke="#383838"
+                        StrokeShape="RoundRectangle 23"
+                        BackgroundColor="#191919"
+                        VerticalOptions="Center">
+                        <Label
+                            Text="👤"
+                            FontSize="22"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center" />
+                    </Border>
+                </Grid>
+
+                <!-- Greeting -->
+                <VerticalStackLayout Spacing="6">
+                    <Label
+                        Text="Намери своя стил."
+                        FontSize="27"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Label
+                        Text="Открий най-добрите професионалисти около теб."
+                        FontSize="14"
+                        TextColor="#AAAAAA" />
+                </VerticalStackLayout>
+
+                <!-- Search -->
+                <Border
+                    BackgroundColor="#1A1A1A"
+                    Stroke="#333333"
+                    StrokeShape="RoundRectangle 15"
+                    Padding="15,0">
+
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Label
+                            Text="⌕"
+                            FontSize="25"
+                            TextColor="#AAAAAA"
+                            VerticalOptions="Center"
+                            Margin="0,0,10,0" />
+
+                        <Entry
+                            x:Name="SearchEntry"
+                            Grid.Column="1"
+                            Placeholder="Салон, бръснар или град"
+                            PlaceholderColor="#888888"
+                            TextColor="White"
+                            BackgroundColor="Transparent"
+                            ClearButtonVisibility="WhileEditing"
+                            HeightRequest="54"
+                            TextChanged="OnSearchTextChanged" />
+                    </Grid>
+                </Border>
+
+                <!-- Categories -->
+                <VerticalStackLayout Spacing="12">
+                    <Label
+                        Text="Категории"
+                        FontSize="19"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                        <Border
+                            BackgroundColor="#F2F2F2"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 14"
+                            Padding="5,14">
+                            <VerticalStackLayout Spacing="7">
+                                <Label Text="✂"
+                                       FontSize="25"
+                                       TextColor="#111111"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Бръснар"
+                                       FontSize="11"
+                                       FontAttributes="Bold"
+                                       TextColor="#111111"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border
+                            Grid.Column="1"
+                            BackgroundColor="#1B1B1B"
+                            Stroke="#333333"
+                            StrokeShape="RoundRectangle 14"
+                            Padding="5,14">
+                            <VerticalStackLayout Spacing="7">
+                                <Label Text="♧"
+                                       FontSize="25"
+                                       TextColor="White"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Фризьор"
+                                       FontSize="11"
+                                       TextColor="White"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border
+                            Grid.Column="2"
+                            BackgroundColor="#1B1B1B"
+                            Stroke="#333333"
+                            StrokeShape="RoundRectangle 14"
+                            Padding="5,14">
+                            <VerticalStackLayout Spacing="7">
+                                <Label Text="✧"
+                                       FontSize="25"
+                                       TextColor="White"
+                                       HorizontalOptions="Center" />
+                                <Label Text="Други"
+                                       FontSize="11"
+                                       TextColor="White"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- Popular salons -->
+                <VerticalStackLayout Spacing="14">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Label
+                            Text="Популярни салони"
+                            FontSize="19"
+                            FontAttributes="Bold"
+                            TextColor="White" />
+
+                        <Label
+                            Grid.Column="1"
+                            Text="Виж всички"
+                            FontSize="12"
+                            TextColor="#BBBBBB"
+                            VerticalOptions="Center" />
+                    </Grid>
+
+                    <VerticalStackLayout
+                        x:Name="SalonsContainer"
+                        Spacing="14">
+
+                        <Border
+                            BackgroundColor="#191919"
+                            Stroke="#303030"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="0">
+
+                            <Grid RowDefinitions="170,Auto">
+                                <Image
+                                    Source="barber_welcome.jpg"
+                                    Aspect="AspectFill" />
+
+                                <Grid
+                                    Grid.Row="1"
+                                    Padding="14"
+                                    RowDefinitions="Auto,Auto"
+                                    ColumnDefinitions="*,Auto">
+
+                                    <Label
+                                        Text="Barber House"
+                                        FontSize="17"
+                                        FontAttributes="Bold"
+                                        TextColor="White" />
+
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="★ 4.9"
+                                        FontSize="13"
+                                        TextColor="White"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="2"
+                                        Text="Русе · Бръснарски услуги"
+                                        FontSize="12"
+                                        TextColor="#AAAAAA"
+                                        Margin="0,6,0,0" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <Border
+                            BackgroundColor="#191919"
+                            Stroke="#303030"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="0">
+
+                            <Grid RowDefinitions="170,Auto">
+                                <Image
+                                    Source="barber_welcome.jpg"
+                                    Aspect="AspectFill" />
+
+                                <Grid
+                                    Grid.Row="1"
+                                    Padding="14"
+                                    RowDefinitions="Auto,Auto"
+                                    ColumnDefinitions="*,Auto">
+
+                                    <Label
+                                        Text="Royal Barber"
+                                        FontSize="17"
+                                        FontAttributes="Bold"
+                                        TextColor="White" />
+
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="★ 4.8"
+                                        FontSize="13"
+                                        TextColor="White"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        Grid.Row="1"
+                                        Grid.ColumnSpan="2"
+                                        Text="Русе · Подстригване и брада"
+                                        FontSize="12"
+                                        TextColor="#AAAAAA"
+                                        Margin="0,6,0,0" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom navigation -->
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="#111111"
+            Padding="8,10,8,12"
+            ColumnDefinitions="*,*,*,*">
+
+            <VerticalStackLayout Spacing="4">
+                <Label
+                    Text="⌂"
+                    FontSize="22"
+                    TextColor="White"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Начало"
+                    FontSize="10"
+                    TextColor="White"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                <Label
+                    Text="▣"
+                    FontSize="20"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Часове"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="2" Spacing="4">
+                <Label
+                    Text="♡"
+                    FontSize="22"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Любими"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="3" Spacing="4">
+                <Label
+                    Text="♙"
+                    FontSize="22"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Профил"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+        </Grid>
+    </Grid>
+</ContentPage>

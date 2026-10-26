@@ -17,8 +17,10 @@ namespace Cutly.Mobile
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
             builder.Services.AddSingleton<AuthApiService>();
+            builder.Services.AddSingleton<SalonApiService>();
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<CustomerHomePage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
