@@ -1,5 +1,7 @@
 ﻿using Cutly.API.Data;
 using Cutly.API.Models.Salon;
+using Cutly.API.Models.Appointments;
+using Cutly.API.DTOs.Salons;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +18,7 @@ public class SalonsController : ControllerBase
         _context = context;
     }
 
-
+    // GET: api/salons
     [HttpGet]
     public async Task<IActionResult> GetSalons()
     {
@@ -30,14 +32,101 @@ public class SalonsController : ControllerBase
                 salon.Address,
                 salon.City,
                 salon.ImageUrl,
-                salon.Location
+
+                AverageRating = _context.Reviews
+                    .Where(review =>
+                        review.Appointment.SalonEmployee.SalonId == salon.Id &&
+                        review.Appointment.Status == AppointmentStatus.Completed)
+                    .Select(review => (double?)review.Rating)
+                    .Average(),
+
+                ReviewCount = _context.Reviews
+                    .Count(review =>
+                        review.Appointment.SalonEmployee.SalonId == salon.Id &&
+                        review.Appointment.Status == AppointmentStatus.Completed)
             })
             .ToListAsync();
 
         return Ok(salons);
     }
 
+    // GET: api/salons/1
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetSalonDetails(int id)
+    {
+        var salon = await _context.Salons
+            .AsNoTracking()
+            .Where(s => s.Id == id)
+            .Select(s => new SalonDetailsDto
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Description = s.Description,
+                City = s.City,
+                Address = s.Address,
+                PhoneNumber = s.PhoneNumber,
+                Email = s.Email,
+                ImageUrl = s.ImageUrl,
 
+                AverageRating = _context.Reviews
+                    .Where(review =>
+                        review.Appointment.SalonEmployee.SalonId == s.Id &&
+                        review.Appointment.Status == AppointmentStatus.Completed)
+                    .Select(review => (double?)review.Rating)
+                    .Average(),
+
+                ReviewCount = _context.Reviews
+                    .Count(review =>
+                        review.Appointment.SalonEmployee.SalonId == s.Id &&
+                        review.Appointment.Status == AppointmentStatus.Completed),
+
+                Employees = _context.SalonEmployees
+                    .Where(employee =>
+                        employee.SalonId == s.Id &&
+                        employee.IsActive)
+                    .Select(employee => new SalonEmployeeDto
+                    {
+                        EmployeeId = employee.EmployeeId,
+
+                        FullName = (
+                            employee.Employee.FirstName + " " +
+                            employee.Employee.LastName
+                        ).Trim(),
+
+                        JobTitle = employee.JobTitle,
+
+                        Services = _context.EmployeeServices
+                            .Where(es =>
+                                es.SalonEmployeeId == employee.Id &&
+                                es.IsActive &&
+                                es.Service.IsActive)
+                            .Select(es => new EmployeeServiceDto
+                            {
+                                EmployeeServiceId = es.Id,
+                                ServiceId = es.ServiceId,
+                                ServiceName = es.Service.Name,
+                                Description = es.Service.Description,
+                                Price = es.Price,
+                                DurationMinutes = es.DurationMinutes
+                            })
+                            .ToList()
+                    })
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        if (salon == null)
+        {
+            return NotFound(new
+            {
+                message = "Салонът не беше намерен."
+            });
+        }
+
+        return Ok(salon);
+    }
+
+    // POST: api/salons
     [HttpPost]
     public async Task<IActionResult> CreateSalon(
         [FromBody] CreateSalonRequest request)
@@ -77,7 +166,7 @@ public class SalonsController : ControllerBase
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(
-            nameof(GetSalons),
+            nameof(GetSalonDetails),
             new { id = salon.Id },
             new
             {

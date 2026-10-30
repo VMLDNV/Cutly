@@ -1,5 +1,4 @@
-﻿
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Cutly.Mobile.Services;
 
@@ -39,6 +38,7 @@ public sealed class SalonApiService
 #endif
     }
 
+    // Взима всички салони
     public async Task<List<SalonDto>> GetSalonsAsync()
     {
         using var response = await _httpClient.GetAsync("api/salons");
@@ -50,19 +50,61 @@ public sealed class SalonApiService
 
         return salons ?? new List<SalonDto>();
     }
+
+    // Взима подробностите за конкретен салон
+    public async Task<SalonDetailsDto?> GetSalonDetailsAsync(int id)
+    {
+        using var response = await _httpClient.GetAsync(
+            $"api/salons/{id}");
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content
+            .ReadFromJsonAsync<SalonDetailsDto>();
+    }
 }
 
 public sealed class SalonDto
 {
     public int Id { get; set; }
-
     public string Name { get; set; } = string.Empty;
-
     public string? Description { get; set; }
-
     public string? Address { get; set; }
-
     public string? City { get; set; }
-
     public string? ImageUrl { get; set; }
+    public double? AverageRating { get; set; }
+    public int ReviewCount { get; set; }
+}
+
+public sealed class SalonDetailsDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string? City { get; set; }
+    public string? Address { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Email { get; set; }
+    public string? ImageUrl { get; set; }
+    public double? AverageRating { get; set; }
+    public int ReviewCount { get; set; }
+    public List<SalonEmployeeDto> Employees { get; set; } = new();
+}
+
+public sealed class SalonEmployeeDto
+{
+    public string EmployeeId { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public string? JobTitle { get; set; }
+    public List<EmployeeServiceDto> Services { get; set; } = new();
+}
+
+public sealed class EmployeeServiceDto
+{
+    public int EmployeeServiceId { get; set; }
+    public int ServiceId { get; set; }
+    public string ServiceName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public decimal Price { get; set; }
+    public int DurationMinutes { get; set; }
 }

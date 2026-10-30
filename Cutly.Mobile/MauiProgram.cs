@@ -18,9 +18,13 @@ namespace Cutly.Mobile
                 });
             builder.Services.AddSingleton<AuthApiService>();
             builder.Services.AddSingleton<SalonApiService>();
+            builder.Services.AddSingleton<FavoritesApiService>();
+
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<CustomerHomePage>();
+            builder.Services.AddTransient<SalonDetailsPage>();
+            builder.Services.AddTransient<FavoritesPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

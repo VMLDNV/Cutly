@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.FavoritesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout
+                Padding="20,30,20,24"
+                Spacing="22">
+
+                <Grid ColumnDefinitions="Auto,*">
+
+                    <Button
+                        Text="‹"
+                        FontSize="30"
+                        TextColor="White"
+                        BackgroundColor="#1B1B1B"
+                        WidthRequest="45"
+                        HeightRequest="45"
+                        CornerRadius="22"
+                        Clicked="OnBackClicked" />
+
+                    <VerticalStackLayout
+                        Grid.Column="1"
+                        Padding="12,0"
+                        VerticalOptions="Center"
+                        Spacing="3">
+
+                        <Label
+                            Text="Любими салони"
+                            FontSize="23"
+                            FontAttributes="Bold"
+                            TextColor="White" />
+
+                        <Label
+                            Text="Твоите запазени места"
+                            FontSize="12"
+                            TextColor="#999999" />
+
+                    </VerticalStackLayout>
+
+                </Grid>
+
+                <Label
+                    x:Name="EmptyStateLabel"
+                    Text="Все още нямаш любими салони.&#10;Добави салон чрез сърцето ❤️"
+                    FontSize="14"
+                    TextColor="#AAAAAA"
+                    HorizontalTextAlignment="Center"
+                    VerticalOptions="Center"
+                    IsVisible="False"
+                    Margin="0,60,0,0" />
+
+                <VerticalStackLayout
+                    x:Name="FavoritesContainer"
+                    Spacing="14" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom navigation -->
+        <Grid
+            Grid.Row="1"
+            BackgroundColor="#111111"
+            Padding="8,10,8,12"
+            ColumnDefinitions="*,*,*,*">
+
+            <VerticalStackLayout Spacing="4">
+                <Label
+                    Text="⌂"
+                    FontSize="22"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Начало"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                <Label
+                    Text="▣"
+                    FontSize="20"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Часове"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="2" Spacing="4">
+                <Label
+                    Text="♥"
+                    FontSize="22"
+                    TextColor="#F04452"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Любими"
+                    FontSize="10"
+                    TextColor="White"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="3" Spacing="4">
+                <Label
+                    Text="♙"
+                    FontSize="22"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+                <Label
+                    Text="Профил"
+                    FontSize="10"
+                    TextColor="#888888"
+                    HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+        </Grid>
+
+    </Grid>
+</ContentPage>

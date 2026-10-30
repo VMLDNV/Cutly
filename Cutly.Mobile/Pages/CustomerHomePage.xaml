@@ -292,17 +292,26 @@
                     HorizontalOptions="Center" />
             </VerticalStackLayout>
 
-            <VerticalStackLayout Grid.Column="2" Spacing="4">
+            <VerticalStackLayout
+                   Grid.Column="2"
+                   Spacing="4">
+
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnFavoritesClicked" />
+                </VerticalStackLayout.GestureRecognizers>
+
                 <Label
                     Text="♡"
                     FontSize="22"
                     TextColor="#888888"
                     HorizontalOptions="Center" />
-                <Label
+
+                        <Label
                     Text="Любими"
                     FontSize="10"
                     TextColor="#888888"
                     HorizontalOptions="Center" />
+
             </VerticalStackLayout>
 
             <VerticalStackLayout Grid.Column="3" Spacing="4">
