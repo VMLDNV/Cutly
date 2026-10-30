@@ -16,6 +16,7 @@ public class SalonsController : ControllerBase
         _context = context;
     }
 
+
     [HttpGet]
     public async Task<IActionResult> GetSalons()
     {
@@ -28,12 +29,14 @@ public class SalonsController : ControllerBase
                 salon.Description,
                 salon.Address,
                 salon.City,
+                salon.ImageUrl,
                 salon.Location
             })
             .ToListAsync();
 
         return Ok(salons);
     }
+
 
     [HttpPost]
     public async Task<IActionResult> CreateSalon(

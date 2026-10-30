@@ -68,12 +68,22 @@ public partial class CustomerHomePage : ContentPage
         DisplaySalons(filteredSalons);
     }
 
+
     private void DisplaySalons(IEnumerable<SalonDto> salons)
     {
         SalonsContainer.Children.Clear();
 
         foreach (var salon in salons)
         {
+            var salonImage = new Image
+            {
+                Source = string.IsNullOrWhiteSpace(salon.ImageUrl)
+                    ? "barber_welcome.jpg"
+                    : salon.ImageUrl,
+                Aspect = Aspect.AspectFill,
+                HeightRequest = 150
+            };
+
             var name = new Label
             {
                 Text = salon.Name,
@@ -104,8 +114,24 @@ public partial class CustomerHomePage : ContentPage
 
             var details = new VerticalStackLayout
             {
+                Padding = new Thickness(14, 12),
                 Spacing = 5,
-                Children = { name, location, description }
+                Children =
+            {
+                name,
+                location,
+                description
+            }
+            };
+
+            var cardContent = new VerticalStackLayout
+            {
+                Spacing = 0,
+                Children =
+            {
+                salonImage,
+                details
+            }
             };
 
             var card = new Border
@@ -113,16 +139,18 @@ public partial class CustomerHomePage : ContentPage
                 Stroke = Color.FromArgb("#343434"),
                 StrokeThickness = 1,
                 BackgroundColor = Color.FromArgb("#1B1B1B"),
-                Padding = 16,
+                Padding = 0,
                 Margin = new Thickness(0, 0, 0, 12),
-                StrokeShape = new Microsoft.Maui.Controls.Shapes.RoundRectangle
-                {
-                    CornerRadius = 14
-                },
-                Content = details
+                StrokeShape =
+                    new Microsoft.Maui.Controls.Shapes.RoundRectangle
+                    {
+                        CornerRadius = 14
+                    },
+                Content = cardContent
             };
 
             SalonsContainer.Children.Add(card);
         }
     }
+
 }

@@ -63,4 +63,6 @@ public sealed class SalonDto
     public string? Address { get; set; }
 
     public string? City { get; set; }
+
+    public string? ImageUrl { get; set; }
 }
