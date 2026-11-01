@@ -76,35 +76,51 @@ public partial class CustomerHomePage : ContentPage
                 "OK");
         }
     }
+
     private void OnSearchTextChanged(
         object sender,
         TextChangedEventArgs e)
     {
         var query = e.NewTextValue?.Trim();
 
-        var filteredSalons = string.IsNullOrWhiteSpace(query)
-            ? _salons
-            : _salons.Where(salon =>
-                (salon.Name?.Contains(
-                    query,
-                    StringComparison.OrdinalIgnoreCase) ?? false)
-                ||
-                (salon.Address?.Contains(
-                    query,
-                    StringComparison.OrdinalIgnoreCase) ?? false)
-                ||
-                (salon.City?.Contains(
-                    query,
-                    StringComparison.OrdinalIgnoreCase) ?? false))
-                .ToList();
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            DisplaySalons(_salons);
+            return;
+        }
+
+        // Разделяме търсенето на отделни думи.
+        var searchTerms = query
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        var filteredSalons = _salons.Where(salon =>
+        {
+            // Обединяваме информацията за салона.
+            var searchableText = string.Join(" ",
+                salon.Name,
+                salon.Description,
+                salon.City,
+                salon.Address);
+
+            // Всяка въведена дума трябва да бъде намерена.
+            return searchTerms.All(term =>
+                searchableText.Contains(
+                    term,
+                    StringComparison.OrdinalIgnoreCase));
+        }).ToList();
 
         DisplaySalons(filteredSalons);
     }
 
 
+
     private void DisplaySalons(IEnumerable<SalonDto> salons)
     {
+        var salonList = salons.ToList();
+
         SalonsContainer.Children.Clear();
+
+        NoResultsLabel.IsVisible = salonList.Count == 0;
 
         foreach (var salon in salons)
         {

@@ -167,6 +167,15 @@
                             VerticalOptions="Center" />
                     </Grid>
 
+                    <Label
+                        x:Name="NoResultsLabel"
+                        Text="Не намерихме салони, отговарящи на търсенето."
+                        FontSize="14"
+                        TextColor="#AAAAAA"
+                        HorizontalTextAlignment="Center"
+                        IsVisible="False"
+                        Margin="0,15,0,15" />
+
                     <VerticalStackLayout
                         x:Name="SalonsContainer"
                         Spacing="14">
