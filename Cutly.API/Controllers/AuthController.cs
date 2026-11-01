@@ -151,12 +151,22 @@ public class AuthController : ControllerBase
             ?? throw new InvalidOperationException(
                 "JWT audience is missing.");
 
+        // Вземаме всички роли на потребителя от Identity.
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+        // Създаваме основните JWT claims.
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id),
             new(ClaimTypes.Name, user.UserName!),
             new(ClaimTypes.Email, user.Email!)
-        };  
+        };
+
+        // Добавяме ролите в JWT токена.
+        claims.AddRange(
+            userRoles.Select(role =>
+                new Claim(ClaimTypes.Role, role))
+        );
 
         var signingKey = new SymmetricSecurityKey(
             Convert.FromBase64String(keyValue));

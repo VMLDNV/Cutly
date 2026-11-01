@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.BookingPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Padding="20" Spacing="22">
+
+                <!-- Header -->
+                <Grid ColumnDefinitions="50,*">
+
+                    <Button
+                        Text="‹"
+                        FontSize="30"
+                        TextColor="White"
+                        BackgroundColor="#202020"
+                        WidthRequest="46"
+                        HeightRequest="46"
+                        CornerRadius="23"
+                        Clicked="OnBackClicked" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="Запази час"
+                        FontSize="23"
+                        FontAttributes="Bold"
+                        TextColor="White"
+                        VerticalOptions="Center"
+                        Margin="12,0" />
+
+                </Grid>
+
+                <!-- Selected service -->
+                <Border
+                    BackgroundColor="#1B1B1B"
+                    Stroke="#343434"
+                    StrokeThickness="1"
+                    Padding="18">
+
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="8">
+
+                        <Label
+                            Text="ИЗБРАНА УСЛУГА"
+                            FontSize="11"
+                            CharacterSpacing="2"
+                            TextColor="#AAAAAA" />
+
+                        <Label
+                            x:Name="ServiceNameLabel"
+                            Text="Мъжко подстригване"
+                            FontSize="21"
+                            FontAttributes="Bold"
+                            TextColor="White" />
+
+                        <Label
+                            x:Name="EmployeeNameLabel"
+                            Text="Служител"
+                            FontSize="14"
+                            TextColor="#BBBBBB" />
+
+                        <Label
+                            x:Name="ServiceDetailsLabel"
+                            Text="25,00 лв. · 60 мин."
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            TextColor="#F5C542" />
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Date selection -->
+                <VerticalStackLayout Spacing="12">
+
+                    <Label
+                        Text="1. Избери дата"
+                        FontSize="19"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Border
+                        BackgroundColor="#1B1B1B"
+                        Stroke="#343434"
+                        Padding="12">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+
+                        <DatePicker
+                            x:Name="AppointmentDatePicker"
+                            Format="dd MMMM yyyy"
+                            TextColor="White"
+                            BackgroundColor="#1B1B1B"
+                            FontSize="16"
+                            DateSelected="OnDateSelected" />
+
+                    </Border>
+
+                </VerticalStackLayout>
+
+                <!-- Available slots -->
+                <VerticalStackLayout Spacing="14">
+
+                    <Label
+                        Text="2. Избери свободен час"
+                        FontSize="19"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <ActivityIndicator
+                        x:Name="LoadingIndicator"
+                        IsRunning="False"
+                        IsVisible="False"
+                        Color="#F5C542" />
+
+                    <Label
+                        x:Name="NoSlotsLabel"
+                        Text="Няма свободни часове за избраната дата."
+                        FontSize="14"
+                        TextColor="#AAAAAA"
+                        IsVisible="False" />
+
+                    <FlexLayout
+                        x:Name="SlotsContainer"
+                        Direction="Row"
+                        Wrap="Wrap"
+                        JustifyContent="Start"
+                        AlignItems="Center" />
+
+                    <Label
+                        x:Name="SelectedSlotLabel"
+                        Text="Все още не е избран час."
+                        FontSize="14"
+                        TextColor="#F5C542" />
+
+                </VerticalStackLayout>
+
+                <!-- Optional notes -->
+                <VerticalStackLayout Spacing="12">
+
+                    <Label
+                        Text="3. Бележка към резервацията"
+                        FontSize="19"
+                        FontAttributes="Bold"
+                        TextColor="White" />
+
+                    <Border
+                        BackgroundColor="#1B1B1B"
+                        Stroke="#343434"
+                        Padding="10">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+
+                        <Editor
+                            x:Name="NotesEditor"
+                            Placeholder="Добави бележка (незадължително)..."
+                            PlaceholderColor="#777777"
+                            TextColor="White"
+                            BackgroundColor="#1B1B1B"
+                            AutoSize="TextChanges"
+                            HeightRequest="90"
+                            MaximumHeightRequest="130"
+                            MaxLength="500" />
+
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Booking button -->
+        <Border
+            Grid.Row="1"
+            BackgroundColor="#111111"
+            Padding="20,12"
+            Stroke="#292929">
+
+            <Button
+                x:Name="BookButton"
+                Text="Потвърди резервацията"
+                BackgroundColor="#F2F2F2"
+                TextColor="#111111"
+                FontSize="16"
+                FontAttributes="Bold"
+                CornerRadius="14"
+                HeightRequest="54"
+                IsEnabled="False"
+                Clicked="OnBookClicked" />
+
+        </Border>
+
+    </Grid>
+</ContentPage>

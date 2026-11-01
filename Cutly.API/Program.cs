@@ -110,6 +110,8 @@ namespace Cutly.API
             {
                 using var scope = app.Services.CreateScope();
 
+                await DevelopmentDataSeeder.SeedAsync(app.Services);
+
                 var roleManager = scope.ServiceProvider
                     .GetRequiredService<RoleManager<IdentityRole>>();
 
