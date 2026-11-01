@@ -6,7 +6,7 @@
     BackgroundColor="#080808"
     Shell.NavBarIsVisible="False">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="*">
 
         <ScrollView Grid.Row="0">
             <VerticalStackLayout
@@ -62,67 +62,5 @@
 
             </VerticalStackLayout>
         </ScrollView>
-
-        <!-- Bottom navigation -->
-        <Grid
-            Grid.Row="1"
-            BackgroundColor="#111111"
-            Padding="8,10,8,12"
-            ColumnDefinitions="*,*,*,*">
-
-            <VerticalStackLayout Spacing="4">
-                <Label
-                    Text="⌂"
-                    FontSize="22"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="Начало"
-                    FontSize="10"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Grid.Column="1" Spacing="4">
-                <Label
-                    Text="▣"
-                    FontSize="20"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="Часове"
-                    FontSize="10"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Grid.Column="2" Spacing="4">
-                <Label
-                    Text="♥"
-                    FontSize="22"
-                    TextColor="#F04452"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="Любими"
-                    FontSize="10"
-                    TextColor="White"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-            <VerticalStackLayout Grid.Column="3" Spacing="4">
-                <Label
-                    Text="♙"
-                    FontSize="22"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="Профил"
-                    FontSize="10"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-            </VerticalStackLayout>
-
-        </Grid>
-
     </Grid>
 </ContentPage>

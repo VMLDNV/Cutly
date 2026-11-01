@@ -8,31 +8,13 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
 
-        Routing.RegisterRoute(
-            nameof(RegisterPage),
-            typeof(RegisterPage));
-
-        Routing.RegisterRoute(
-            nameof(LoginPage),
-            typeof(LoginPage));
-
-        Routing.RegisterRoute(
-           nameof(CustomerHomePage),
-           typeof(CustomerHomePage));
-
-        Routing.RegisterRoute(
-           nameof(SalonDetailsPage),
-           typeof(SalonDetailsPage));
-
-        Routing.RegisterRoute(
-           nameof(FavoritesPage),
-           typeof(FavoritesPage));
-
-        Routing.RegisterRoute(
-           nameof(BookingPage),
-           typeof(BookingPage));
-        Routing.RegisterRoute(
-           nameof(ServiceEmployeesPage),
-           typeof(ServiceEmployeesPage));
+        Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
+        Routing.RegisterRoute(nameof(LoginPage), typeof(LoginPage));
+        Routing.RegisterRoute(nameof(CustomerHomePage), typeof(CustomerHomePage));
+        Routing.RegisterRoute(nameof(SalonDetailsPage), typeof(SalonDetailsPage));
+        Routing.RegisterRoute(nameof(FavoritesPage), typeof(FavoritesPage));
+        Routing.RegisterRoute(nameof(BookingPage), typeof(BookingPage));
+        Routing.RegisterRoute(nameof(ServiceEmployeesPage), typeof(ServiceEmployeesPage));
+        Routing.RegisterRoute(nameof(MyAppointmentsPage), typeof(MyAppointmentsPage));
     }
 }

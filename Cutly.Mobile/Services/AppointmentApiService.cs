@@ -118,6 +118,46 @@ public sealed class AppointmentApiService
         return result ?? throw new InvalidOperationException(
             "Сървърът не върна информация за резервацията.");
     }
+
+    // GET: api/appointments/my
+    public async Task<List<MyAppointmentDto>> GetMyAppointmentsAsync()
+    {
+        using var request = await CreateRequestAsync(
+            HttpMethod.Get,
+            "api/appointments/my");
+
+        using var response = await _httpClient.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var appointments = await response.Content
+            .ReadFromJsonAsync<List<MyAppointmentDto>>();
+
+        return appointments ?? new List<MyAppointmentDto>();
+    }
+
+    // POST: api/appointments/{id}/cancel
+    public async Task CancelAppointmentAsync(int appointmentId)
+    {
+        using var request = await CreateRequestAsync(
+            HttpMethod.Post,
+            $"api/appointments/{appointmentId}/cancel");
+
+        using var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+
+            throw new HttpRequestException(
+                string.IsNullOrWhiteSpace(errorMessage)
+                    ? "Неуспешна отмяна на резервацията."
+                    : errorMessage,
+                null,
+                response.StatusCode);
+        }
+    }
+
 }
 
 public class AvailableSlotDto
@@ -150,3 +190,31 @@ public class CreateAppointmentResult
 
     public string Message { get; set; } = string.Empty;
 }
+
+public class MyAppointmentDto
+{
+    public int Id { get; set; }
+
+    public string SalonName { get; set; } = string.Empty;
+
+    public string City { get; set; } = string.Empty;
+
+    public string Address { get; set; } = string.Empty;
+
+    public string EmployeeName { get; set; } = string.Empty;
+
+    public string ServiceName { get; set; } = string.Empty;
+
+    public decimal Price { get; set; }
+
+    public int DurationMinutes { get; set; }
+
+    public DateTimeOffset StartDateTime { get; set; }
+
+    public DateTimeOffset EndDateTime { get; set; }
+
+    public string Status { get; set; } = string.Empty;
+
+    public string? CustomerNotes { get; set; }
+}
+

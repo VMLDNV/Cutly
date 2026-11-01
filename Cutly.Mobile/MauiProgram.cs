@@ -29,6 +29,7 @@ namespace Cutly.Mobile
             builder.Services.AddTransient<FavoritesPage>();
             builder.Services.AddTransient<BookingPage>();
             builder.Services.AddTransient<ServiceEmployeesPage>();
+            builder.Services.AddTransient<MyAppointmentsPage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.MyAppointmentsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid
+    Grid.Row="0"
+    Padding="20,18,20,14"
+    ColumnDefinitions="50,*"
+    ColumnSpacing="12">
+
+            <Button
+        Text="‹"
+        FontSize="32"
+        TextColor="White"
+        BackgroundColor="#202020"
+        WidthRequest="46"
+        HeightRequest="46"
+        CornerRadius="23"
+        Padding="0"
+        Clicked="OnBackClicked" />
+
+            <VerticalStackLayout
+        Grid.Column="1"
+        Spacing="3"
+        VerticalOptions="Center">
+
+                <Label
+            Text="Моите резервации"
+            FontSize="23"
+            FontAttributes="Bold"
+            TextColor="White" />
+
+                <Label
+            Text="Преглед на твоите часове"
+            FontSize="13"
+            TextColor="#AAAAAA" />
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+        <ScrollView Grid.Row="1">
+
+            <VerticalStackLayout
+                Padding="20,8,20,30"
+                Spacing="22">
+
+                <!-- Loading -->
+                <ActivityIndicator
+                    x:Name="LoadingIndicator"
+                    IsRunning="False"
+                    IsVisible="False"
+                    Color="#F5C542"
+                    HorizontalOptions="Center" />
+
+                <!-- Error -->
+                <Label
+                    x:Name="ErrorLabel"
+                    IsVisible="False"
+                    TextColor="#FF7777"
+                    FontSize="14" />
+
+                <!-- Upcoming appointments -->
+                <VerticalStackLayout Spacing="12">
+
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <Label
+                            Text="Предстоящи"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            x:Name="UpcomingCountLabel"
+                            Grid.Column="1"
+                            Text="0"
+                            FontSize="13"
+                            TextColor="#F5C542"
+                            VerticalOptions="Center" />
+
+                    </Grid>
+
+                    <Label
+                        x:Name="NoUpcomingLabel"
+                        Text="Нямаш предстоящи резервации."
+                        FontSize="14"
+                        TextColor="#999999"
+                        IsVisible="False" />
+
+                    <VerticalStackLayout
+                        x:Name="UpcomingContainer"
+                        Spacing="12" />
+
+                </VerticalStackLayout>
+
+                <BoxView
+                    HeightRequest="1"
+                    BackgroundColor="#333333" />
+
+                <!-- History -->
+                <VerticalStackLayout Spacing="12">
+
+                    <Grid ColumnDefinitions="*,Auto">
+
+                        <Label
+                            Text="История"
+                            FontSize="20"
+                            FontAttributes="Bold"
+                            TextColor="White"
+                            VerticalOptions="Center" />
+
+                        <Label
+                            x:Name="HistoryCountLabel"
+                            Grid.Column="1"
+                            Text="0"
+                            FontSize="13"
+                            TextColor="#AAAAAA"
+                            VerticalOptions="Center" />
+
+                    </Grid>
+
+                    <Label
+                        x:Name="NoHistoryLabel"
+                        Text="Все още нямаш история на резервациите."
+                        FontSize="14"
+                        TextColor="#999999"
+                        IsVisible="False" />
+
+                    <VerticalStackLayout
+                        x:Name="HistoryContainer"
+                        Spacing="12" />
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

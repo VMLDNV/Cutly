@@ -112,8 +112,6 @@ public partial class CustomerHomePage : ContentPage
         DisplaySalons(filteredSalons);
     }
 
-
-
     private void DisplaySalons(IEnumerable<SalonDto> salons)
     {
         var salonList = salons.ToList();
@@ -251,12 +249,20 @@ public partial class CustomerHomePage : ContentPage
         }
     }
 
-    private async void OnFavoritesClicked(
-        object sender,
-        TappedEventArgs e)
+    private async void OnFavoritesButtonClicked(
+    object sender,
+    EventArgs e)
     {
         await Shell.Current.GoToAsync(
             nameof(FavoritesPage));
+    }
+
+    private async void OnAppointmentsClicked(
+     object sender,
+     EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            nameof(MyAppointmentsPage));
     }
 
     private async Task ToggleFavoriteAsync(

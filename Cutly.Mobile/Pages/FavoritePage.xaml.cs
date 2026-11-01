@@ -205,4 +205,37 @@ public partial class FavoritesPage : ContentPage
     {
         await Shell.Current.GoToAsync("..");
     }
+    private async void OnHomeClicked(
+        object sender,
+        EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            $"//{nameof(CustomerHomePage)}");
+    }
+
+    private async void OnAppointmentsClicked(
+        object sender,
+        EventArgs e)
+    {
+        await Shell.Current.GoToAsync(
+            nameof(MyAppointmentsPage));
+    }
+
+    private async void OnFavoritesClicked(
+        object sender,
+        EventArgs e)
+    {
+        await LoadFavoritesAsync();
+    }
+
+    private async void OnProfileClicked(
+        object sender,
+        EventArgs e)
+    {
+        await DisplayAlert(
+            "Профил",
+            "Потребителският профил ще бъде добавен в следващ етап.",
+            "OK");
+    }
+
 }

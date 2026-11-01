@@ -425,4 +425,74 @@ public class AppointmentsController : ControllerBase
 
         return Ok(slots);
     }
+
+
+    [HttpGet("my")]
+    [Authorize(Roles = "Customer")]
+    public async Task<IActionResult> GetMyAppointments()
+    {
+        var customerId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(customerId))
+            return Unauthorized();
+
+        var appointments = await _context.Appointments
+            .AsNoTracking()
+            .Where(a => a.CustomerId == customerId)
+            .OrderByDescending(a => a.StartDateTime)
+            .Select(a => new
+            {
+                a.Id,
+
+                SalonName = a.SalonEmployee.Salon.Name,
+                City = a.SalonEmployee.Salon.City,
+                Address = a.SalonEmployee.Salon.Address,
+
+                EmployeeFirstName =
+                    a.SalonEmployee.Employee.FirstName,
+
+                EmployeeLastName =
+                    a.SalonEmployee.Employee.LastName,
+
+                ServiceName = a.EmployeeService.Service.Name,
+
+                a.Price,
+                DurationMinutes =
+                    a.EmployeeService.DurationMinutes,
+
+                a.StartDateTime,
+                a.EndDateTime,
+                a.Status,
+                a.CustomerNotes
+            })
+            .ToListAsync();
+
+        var result = appointments.Select(a => new MyAppointmentDto
+        {
+            Id = a.Id,
+
+            SalonName = a.SalonName,
+            City = a.City,
+            Address = a.Address,
+
+            EmployeeName =
+                $"{a.EmployeeFirstName} {a.EmployeeLastName}".Trim(),
+
+            ServiceName = a.ServiceName,
+
+            Price = a.Price,
+            DurationMinutes = a.DurationMinutes,
+
+            StartDateTime = a.StartDateTime,
+            EndDateTime = a.EndDateTime,
+
+            Status = a.Status.ToString(),
+
+            CustomerNotes = a.CustomerNotes
+        }).ToList();
+
+        return Ok(result);
+    }
+
 }
