@@ -181,15 +181,18 @@ public class AuthController : ControllerBase
             expires: DateTime.UtcNow.AddHours(2),
             signingCredentials: credentials);
 
+        userRoles = await _userManager.GetRolesAsync(user);
+
         return Ok(new
         {
             accessToken = new JwtSecurityTokenHandler()
-                .WriteToken(token),
+            .WriteToken(token),
             expiresAtUtc = token.ValidTo,
             userId = user.Id,
-            email = user.Email
+            email = user.Email,
+            roles = userRoles
         });
-        
+
     }
 
     [Authorize]

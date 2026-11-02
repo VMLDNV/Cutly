@@ -9,20 +9,25 @@ public partial class CustomerHomePage : ContentPage
     private List<SalonDto> _salons = new();
     private readonly FavoritesApiService _favoritesApiService;
     private readonly HashSet<int> _favoriteSalonIds = new();
+    private readonly AuthApiService _authApiService;
+    private List<string> _userRoles = new();
 
     public CustomerHomePage(
-        SalonApiService salonApiService,
-        FavoritesApiService favoritesApiService)
+    SalonApiService salonApiService,
+    FavoritesApiService favoritesApiService,
+    AuthApiService authApiService)
     {
         InitializeComponent();
 
         _salonApiService = salonApiService;
         _favoritesApiService = favoritesApiService;
+        _authApiService = authApiService;
     }
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
+        await LoadUserRolesAsync();
         await LoadFavoritesAsync();
         await LoadSalonsAsync();
     }
@@ -319,4 +324,166 @@ public partial class CustomerHomePage : ContentPage
                 "OK");
         }
     }
+
+
+    private async Task LoadUserRolesAsync()
+    {
+        _userRoles = await _authApiService.GetUserRolesAsync();
+
+        BuildBottomNavigation();
+    }
+
+    private void BuildBottomNavigation()
+    {
+        BottomNavigation.Children.Clear();
+        BottomNavigation.ColumnDefinitions.Clear();
+
+        bool isBusinessOwner = _userRoles.Contains(
+            "BusinessOwner",
+            StringComparer.OrdinalIgnoreCase);
+
+        bool isEmployee = _userRoles.Contains(
+            "Employee",
+            StringComparer.OrdinalIgnoreCase);
+
+        var items = new List<(string Icon, string Title, string Action)>();
+
+        if (isBusinessOwner)
+        {
+            items.Add(("▦", "Табло", "dashboard"));
+            items.Add(("▣", "Резервации", "management"));
+            items.Add(("▦", "Моят график", "schedule"));
+            items.Add(("▤", "Салони", "salons"));
+        }
+        else if (isEmployee)
+        {
+            items.Add(("⌂", "Начало", "home"));
+            items.Add(("▦", "Моят график", "schedule"));
+            items.Add(("▣", "Резервации", "management"));
+        }
+        else
+        {
+            items.Add(("⌂", "Начало", "home"));
+            items.Add(("▣", "Часове", "appointments"));
+            items.Add(("♡", "Любими", "favorites"));
+        }
+
+        // Разпределяме бутоните равномерно по цялата ширина.
+        foreach (var item in items)
+        {
+            BottomNavigation.ColumnDefinitions.Add(
+                new ColumnDefinition(GridLength.Star));
+        }
+
+        // Създаваме бутоните в правилния ред.
+        for (int i = 0; i < items.Count; i++)
+        {
+            AddNavigationItem(
+                items[i].Icon,
+                items[i].Title,
+                i,
+                items[i].Action);
+        }
+    }
+
+
+
+    private void AddNavigationItem(
+        string icon,
+        string title,
+        int column,
+        string action)
+    {
+        var iconLabel = new Label
+        {
+            Text = icon,
+            FontSize = 22,
+            TextColor = Colors.White,
+            HorizontalOptions = LayoutOptions.Center,
+            HorizontalTextAlignment = TextAlignment.Center
+        };
+
+        var titleLabel = new Label
+        {
+            Text = title,
+            FontSize = 10,
+            TextColor = Color.FromArgb("#AAAAAA"),
+            HorizontalOptions = LayoutOptions.Center,
+            HorizontalTextAlignment = TextAlignment.Center
+        };
+
+        var content = new VerticalStackLayout
+        {
+            Spacing = 4,
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center,
+            Children = { iconLabel, titleLabel }
+        };
+
+        var itemGrid = new Grid
+        {
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Fill
+        };
+
+        itemGrid.Children.Add(content);
+
+        var button = new Button
+        {
+            BackgroundColor = Colors.Transparent,
+            Text = string.Empty,
+            Padding = 0,
+            Margin = 0,
+            BorderWidth = 0,
+            HorizontalOptions = LayoutOptions.Fill,
+            VerticalOptions = LayoutOptions.Fill
+        };
+
+        button.Clicked += async (_, _) =>
+            await NavigateFromBottomNavigationAsync(action);
+
+        itemGrid.Children.Add(button);
+
+        BottomNavigation.Add(itemGrid, column, 0);
+    }
+
+
+    private async Task NavigateFromBottomNavigationAsync(string action)
+    {
+        switch (action)
+        {
+            case "home":
+            case "dashboard":
+                // Началната страница засега е обща.
+                break;
+
+            case "appointments":
+                await Shell.Current.GoToAsync(
+                    nameof(MyAppointmentsPage));
+                break;
+
+            case "favorites":
+                await Shell.Current.GoToAsync(
+                    nameof(FavoritesPage));
+                break;
+
+            case "management":
+                await Shell.Current.GoToAsync(
+                    nameof(BusinessAppointmentsPage));
+                break;
+
+            case "schedule":
+                await Shell.Current.GoToAsync(
+                    nameof(MySchedulePage));
+                break;
+
+            case "salons":
+                await DisplayAlert(
+                    "Моите салони",
+                    "Управлението на салоните ще бъде добавено в следващия етап.",
+                    "OK");
+                break;
+        }
+    }
+
 }

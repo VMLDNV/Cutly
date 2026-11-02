@@ -30,6 +30,8 @@ namespace Cutly.Mobile
             builder.Services.AddTransient<BookingPage>();
             builder.Services.AddTransient<ServiceEmployeesPage>();
             builder.Services.AddTransient<MyAppointmentsPage>();
+            builder.Services.AddTransient<BusinessAppointmentsPage>();
+            builder.Services.AddTransient<MySchedulePage>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

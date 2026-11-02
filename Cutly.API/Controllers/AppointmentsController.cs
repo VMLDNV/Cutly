@@ -129,7 +129,7 @@ public class AppointmentsController : ControllerBase
             if (hasAppointment)
                 return Conflict("Този час вече е резервиран.");
 
-            // Създаваме резервацията.
+            // Създаваме и потвърждаваме резервацията автоматично.
             var appointment = new Appointment
             {
                 CustomerId = customerId,
@@ -138,7 +138,7 @@ public class AppointmentsController : ControllerBase
                 StartDateTime = startUtc,
                 EndDateTime = endUtc,
                 Price = employeeService.Price,
-                Status = AppointmentStatus.Pending,
+                Status = AppointmentStatus.Confirmed,
                 CustomerNotes = request.CustomerNotes,
                 CreatedAt = DateTime.UtcNow
             };
@@ -169,9 +169,12 @@ public class AppointmentsController : ControllerBase
     }
 
 
-    private async Task<IActionResult> UpdateManagementStatusAsync(
-        int appointmentId,
-        AppointmentStatus newStatus)
+    // POST: api/appointments/{id}/management-cancel
+    // Служителят може да отменя резервации само за себе си.
+    // Собственикът може да отменя резервации във всички свои салони.
+    [HttpPost("{id:int}/management-cancel")]
+    [Authorize(Roles = "Employee,BusinessOwner")]
+    public async Task<IActionResult> CancelManagedAppointment(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -182,13 +185,11 @@ public class AppointmentsController : ControllerBase
             .Include(a => a.SalonEmployee)
                 .ThenInclude(se => se.Salon)
                     .ThenInclude(s => s.Business)
-            .FirstOrDefaultAsync(a => a.Id == appointmentId);
+            .FirstOrDefaultAsync(a => a.Id == id);
 
         if (appointment == null)
             return NotFound("Резервацията не е намерена.");
 
-        // Проверяваме дали потребителят е служителят за тази резервация
-        // или собственикът на бизнеса, към който принадлежи салонът.
         bool isEmployee =
             User.IsInRole("Employee") &&
             appointment.SalonEmployee.EmployeeId == userId;
@@ -200,13 +201,14 @@ public class AppointmentsController : ControllerBase
         if (!isEmployee && !isBusinessOwner)
             return Forbid();
 
-        if (appointment.Status != AppointmentStatus.Pending)
+        if (appointment.Status != AppointmentStatus.Confirmed &&
+            appointment.Status != AppointmentStatus.Pending)
         {
             return Conflict(
-                "Само резервации със статус Pending могат да бъдат потвърждавани или отказвани.");
+                "Тази резервация вече не може да бъде отменена.");
         }
 
-        appointment.Status = newStatus;
+        appointment.Status = AppointmentStatus.Cancelled;
 
         await _context.SaveChangesAsync();
 
@@ -214,28 +216,8 @@ public class AppointmentsController : ControllerBase
         {
             appointment.Id,
             Status = appointment.Status.ToString(),
-            Message = newStatus == AppointmentStatus.Confirmed
-                ? "Резервацията е потвърдена успешно."
-                : "Резервацията е отказана успешно."
+            Message = "Резервацията е отменена успешно."
         });
-    }
-
-    [HttpPost("{id:int}/confirm")]
-    [Authorize(Roles = "Employee,BusinessOwner")]
-    public async Task<IActionResult> ConfirmAppointment(int id)
-    {
-        return await UpdateManagementStatusAsync(
-            id,
-            AppointmentStatus.Confirmed);
-    }
-
-    [HttpPost("{id:int}/reject")]
-    [Authorize(Roles = "Employee,BusinessOwner")]
-    public async Task<IActionResult> RejectAppointment(int id)
-    {
-        return await UpdateManagementStatusAsync(
-            id,
-            AppointmentStatus.Rejected);
     }
 
     [HttpPost("{id:int}/cancel")]
@@ -493,6 +475,63 @@ public class AppointmentsController : ControllerBase
         }).ToList();
 
         return Ok(result);
+    }
+
+
+    [HttpGet("management")]
+    [Authorize(Roles = "Employee,BusinessOwner")]
+    public async Task<IActionResult> GetManagedAppointments()
+    {
+        var userId = User.FindFirstValue(
+            ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        bool isEmployee = User.IsInRole("Employee");
+        bool isBusinessOwner = User.IsInRole("BusinessOwner");
+
+        var appointments = await _context.Appointments
+            .AsNoTracking()
+            .Where(a =>
+                (isEmployee &&
+                 a.SalonEmployee.EmployeeId == userId)
+                ||
+                (isBusinessOwner &&
+                 a.SalonEmployee.Salon.Business.OwnerId == userId))
+            .OrderBy(a => a.StartDateTime)
+            .Select(a => new ManagedAppointmentDto
+            {
+                Id = a.Id,
+
+                SalonName = a.SalonEmployee.Salon.Name,
+
+                CustomerName =
+                    a.Customer.FirstName + " " + a.Customer.LastName,
+
+                CustomerEmail = a.Customer.Email ?? string.Empty,
+
+                EmployeeName =
+                    a.SalonEmployee.Employee.FirstName + " " +
+                    a.SalonEmployee.Employee.LastName,
+
+                ServiceName = a.EmployeeService.Service.Name,
+
+                Price = a.Price,
+
+                DurationMinutes =
+                    a.EmployeeService.DurationMinutes,
+
+                StartDateTime = a.StartDateTime,
+                EndDateTime = a.EndDateTime,
+
+                Status = a.Status.ToString(),
+
+                CustomerNotes = a.CustomerNotes
+            })
+            .ToListAsync();
+
+        return Ok(appointments);
     }
 
 }

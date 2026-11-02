@@ -158,6 +158,45 @@ public sealed class AppointmentApiService
         }
     }
 
+
+    // GET: api/appointments/management
+    public async Task<List<ManagedAppointmentDto>> GetManagedAppointmentsAsync()
+    {
+        using var request = await CreateRequestAsync(
+            HttpMethod.Get,
+            "api/appointments/management");
+
+        using var response = await _httpClient.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var appointments = await response.Content
+            .ReadFromJsonAsync<List<ManagedAppointmentDto>>();
+
+        return appointments ?? new List<ManagedAppointmentDto>();
+    }
+
+    // POST: api/appointments/{id}/management-cancel
+    public async Task CancelManagedAppointmentAsync(int appointmentId)
+    {
+        using var request = await CreateRequestAsync(
+            HttpMethod.Post,
+            $"api/appointments/{appointmentId}/management-cancel");
+
+        using var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+
+            throw new HttpRequestException(
+                string.IsNullOrWhiteSpace(errorMessage)
+                    ? "Неуспешна отмяна на резервацията."
+                    : errorMessage,
+                null,
+                response.StatusCode);
+        }
+    }
 }
 
 public class AvailableSlotDto
@@ -218,3 +257,29 @@ public class MyAppointmentDto
     public string? CustomerNotes { get; set; }
 }
 
+public class ManagedAppointmentDto
+{
+    public int Id { get; set; }
+
+    public string SalonName { get; set; } = string.Empty;
+
+    public string CustomerName { get; set; } = string.Empty;
+
+    public string CustomerEmail { get; set; } = string.Empty;
+
+    public string EmployeeName { get; set; } = string.Empty;
+
+    public string ServiceName { get; set; } = string.Empty;
+
+    public decimal Price { get; set; }
+
+    public int DurationMinutes { get; set; }
+
+    public DateTimeOffset StartDateTime { get; set; }
+
+    public DateTimeOffset EndDateTime { get; set; }
+
+    public string Status { get; set; } = string.Empty;
+
+    public string? CustomerNotes { get; set; }
+}

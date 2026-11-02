@@ -93,6 +93,7 @@ public sealed class AuthApiService
         public string? Token { get; set; }
         public string? AccessToken { get; set; }
         public string? Message { get; set; }
+        public List<string> Roles { get; set; } = new();
     }
 
     public async Task<bool> LoginAsync(
@@ -123,9 +124,24 @@ public sealed class AuthApiService
         await SecureStorage.Default.SetAsync(
             "auth_token",
             token);
+        await SecureStorage.Default.SetAsync(
+            "user_roles",
+            string.Join("|", result.Roles));
 
         return true;
     }
 
+    public async Task<List<string>> GetUserRolesAsync()
+    {
+        var roles = await SecureStorage.Default.GetAsync(
+            "user_roles");
+
+        if (string.IsNullOrWhiteSpace(roles))
+            return new List<string>();
+
+        return roles.Split(
+            '|',
+            StringSplitOptions.RemoveEmptyEntries).ToList();
+    }
 
 }

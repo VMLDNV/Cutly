@@ -270,120 +270,17 @@
 
 
         <!-- Bottom navigation -->
+        <!-- Dynamic bottom navigation -->
         <Grid
-    Grid.Row="1"
-    BackgroundColor="#111111"
-    Padding="8,10,8,12"
-    ColumnDefinitions="*,*,*,*">
+            x:Name="BottomNavigation"
+            Grid.Row="1"
+            BackgroundColor="#111111"
+            Padding="8,10,8,12"
+            ColumnDefinitions="*,*,*">
 
-            <!-- Home -->
-            <VerticalStackLayout
-        Grid.Column="0"
-        Spacing="4"
-        HorizontalOptions="Center">
-
-                <Label
-            Text="⌂"
-            FontSize="22"
-            TextColor="White"
-            HorizontalOptions="Center" />
-
-                <Label
-            Text="Начало"
-            FontSize="10"
-            TextColor="White"
-            HorizontalOptions="Center" />
-
-            </VerticalStackLayout>
-
-            <!-- Appointments -->
-            <Grid Grid.Column="1">
-
-                <VerticalStackLayout
-            Spacing="4"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
-
-                    <Label
-                Text="▣"
-                FontSize="20"
-                TextColor="#888888"
-                HorizontalOptions="Center" />
-
-                    <Label
-                Text="Часове"
-                FontSize="10"
-                TextColor="#888888"
-                HorizontalOptions="Center" />
-
-                </VerticalStackLayout>
-
-                <Button
-            BackgroundColor="Transparent"
-            Text=""
-            Padding="0"
-            Margin="0"
-            BorderWidth="0"
-            HorizontalOptions="Fill"
-            VerticalOptions="Fill"
-            Clicked="OnAppointmentsClicked" />
-
-            </Grid>
-
-            <!-- Favorites -->
-            <Grid Grid.Column="2">
-
-                <VerticalStackLayout
-            Spacing="4"
-            HorizontalOptions="Center"
-            VerticalOptions="Center">
-
-                    <Label
-                Text="♡"
-                FontSize="22"
-                TextColor="#888888"
-                HorizontalOptions="Center" />
-
-                    <Label
-                Text="Любими"
-                FontSize="10"
-                TextColor="#888888"
-                HorizontalOptions="Center" />
-
-                </VerticalStackLayout>
-
-                <Button
-                    BackgroundColor="Transparent"
-                    Text=""
-                    Padding="0"
-                    Margin="0"
-                    BorderWidth="0"
-                    HorizontalOptions="Fill"
-                    VerticalOptions="Fill"
-                    Clicked="OnFavoritesButtonClicked" />
-
-            </Grid>
-
-            <!-- Profile -->
-            <VerticalStackLayout
-                Grid.Column="3"
-                Spacing="4"
-                HorizontalOptions="Center"> 
-
-                <Label
-                    Text="♙"
-                    FontSize="22"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-
-                <Label
-                    Text="Профил"
-                    FontSize="10"
-                    TextColor="#888888"
-                    HorizontalOptions="Center" />
-
-            </VerticalStackLayout>
+            <!-- Navigation buttons are generated dynamically -->
 
         </Grid>
+
     </Grid>
 </ContentPage>

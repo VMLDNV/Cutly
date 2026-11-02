@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Cutly.Mobile.Pages.BusinessAppointmentsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    BackgroundColor="#080808"
+    Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Grid Padding="20,20,20,15"
+              ColumnDefinitions="Auto,*"
+              ColumnSpacing="14">
+
+            <Button Text="‹"
+                    FontSize="32"
+                    TextColor="White"
+                    BackgroundColor="Transparent"
+                    Padding="0"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Clicked="OnBackClicked"/>
+
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="3"
+                                 VerticalOptions="Center">
+
+                <Label Text="Резервации"
+                       FontSize="25"
+                       FontAttributes="Bold"
+                       TextColor="White"/>
+
+                <Label Text="Управление на резервациите"
+                       FontSize="12"
+                       TextColor="#999999"/>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- Appointments -->
+        <RefreshView Grid.Row="1"
+                     x:Name="AppointmentsRefreshView"
+                     Refreshing="OnRefresh">
+
+            <ScrollView>
+                <VerticalStackLayout
+                    x:Name="AppointmentsContainer"
+                    Padding="20,5,20,25"
+                    Spacing="14">
+
+                    <ActivityIndicator
+                        x:Name="LoadingIndicator"
+                        IsRunning="False"
+                        IsVisible="False"
+                        Color="#C30F45"/>
+
+                    <Label x:Name="EmptyLabel"
+                           Text="Все още няма резервации."
+                           TextColor="#999999"
+                           FontSize="14"
+                           HorizontalOptions="Center"
+                           Margin="0,40,0,0"
+                           IsVisible="False"/>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>
